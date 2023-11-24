@@ -42,12 +42,11 @@ async def obtener_dispositivos():
     return response
 
 
-"""@app.get("/dispositivos/{id_dispositivo}")
-async def obtener_contacto(email: str):
-    # Consulta el contacto por su email
+@app.get("/dispositivos/{id_dispositivo}")
+async def obtener_valor_dispositivo(id_dispositivo: int):
+    """Obtiene el valor de un dispositivo por su id_dispositivo."""
     c = conn.cursor()
-    c.execute('SELECT * FROM contactos WHERE email = ?', (email,))
-    contacto = None
-    for row in c:
-        contacto = {"email":row[0],"nombre":row[1],"telefono":row[2]}
-    return contacto"""
+    c.execute('SELECT valor FROM dispositivos WHERE id_dispositivo = ?', (id_dispositivo,))
+    valor = c.fetchone()  # Obtiene la primera fila de la consulta
+    
+    return {"valor": valor[0] if valor else None}  # Devuelve el valor o None si no se encontró el dispositivo

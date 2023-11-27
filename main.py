@@ -13,6 +13,9 @@ class Contacto(BaseModel):
     dispositivo : str
     valor : str
     
+class Dispositivo(BaseModel):
+    valor : str
+
 # Origins
 origins = [
     "http://localhost:8080",
@@ -50,3 +53,11 @@ async def obtener_valor_dispositivo(id_dispositivo: int):
     valor = c.fetchone()  # Obtiene la primera fila de la consulta
     
     return {"valor": valor[0] if valor else None}  # Devuelve el valor o None si no se encontró el dispositivo
+
+@app.patch("/dispositivos/{id_dispositivo}")
+async def actualizar_valor_dispositivo(id_dispositivo: int, contacto: Dispositivo):
+    """Actualiza el valor de un dispositivo por su id_dispositivo."""
+    c = conn.cursor()
+    c.execute('UPDATE dispositivos SET valor = ? WHERE id_dispositivo = ?', (contacto.valor, id_dispositivo))
+    conn.commit()
+    return {"mensaje": "Valor actualizado"}

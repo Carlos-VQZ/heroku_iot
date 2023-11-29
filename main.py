@@ -54,10 +54,10 @@ async def obtener_valor_dispositivo(id_dispositivo: int):
     
     return {"valor": valor[0] if valor else None}  # Devuelve el valor o None si no se encontró el dispositivo
 
-@app.patch("/dispositivos/{id_dispositivo}")
-async def actualizar_valor_dispositivo(id_dispositivo: int, contacto: Dispositivo):
+@app.put("/dispositivos/{id_dispositivo}/{nuevo_valor}")
+async def actualizar_valor_dispositivo(id_dispositivo: int, nuevo_valor: str):
     """Actualiza el valor de un dispositivo por su id_dispositivo."""
     c = conn.cursor()
-    c.execute('UPDATE dispositivos SET valor = ? WHERE id_dispositivo = ?', (contacto.valor, id_dispositivo))
+    c.execute('UPDATE dispositivos SET valor = ? WHERE id_dispositivo = ?', (nuevo_valor, id_dispositivo))
     conn.commit()
     return {"mensaje": "Valor actualizado"}

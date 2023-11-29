@@ -6,7 +6,7 @@ const char* password = "";
 
 const int ledPin = 14; // Pin para controlar el LED
 
-String serverName = "https://herokuiot-4e5cc906e754.herokuapp.com/dispositivos/1"; // Cambia esto por tu URL de la base de datos
+String serverName = "https://herokuiot-default-rtdb.firebaseio.com/dispositivos/1/valor.json"; // Cambia esto por tu URL de la base de datos
 
 unsigned long lastTime = 0;
 unsigned long timerDelay = 100; // Intervalo de tiempo para consultar el estado en milisegundos (10 segundos)
@@ -18,7 +18,7 @@ void setup() {
   WiFi.begin(ssid, password);
   Serial.println("Conectando a WiFi...");
   while(WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(100);
     Serial.print(".");
   }
   Serial.println("");
@@ -42,14 +42,13 @@ void loop() {
         Serial.print("Payload: ");
         Serial.println(payload);
 
-        // Verificar el valor obtenido y controlar el LED
-        int index = payload.indexOf("\"valor\":\"0\"");
-        if (index != -1) {
-          digitalWrite(ledPin, LOW); // Apaga el LED si el valor es "0"
-          Serial.println("LED apagado");
-        } else {
-          digitalWrite(ledPin, HIGH); // Enciende el LED si el valor no es "0"
+        // Verificar si el valor es "0" en el payload
+        if (payload.equals("1")) {
+          digitalWrite(ledPin, HIGH); // Enciende el LED si el valor es "1"
           Serial.println("LED encendido");
+        } else {
+          digitalWrite(ledPin, LOW); // Apaga el LED si el valor no es "1"
+          Serial.println("LED apagado");
         }
       } else {
         Serial.print("Error code: ");

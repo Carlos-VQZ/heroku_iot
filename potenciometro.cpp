@@ -7,8 +7,8 @@ const char* password = "";
 int pinPotenciometro = 34;
 int ledPin = 14; // Pin del LED
 
-// URL de la API en Heroku
-String serverName = "https://herokuiot-4e5cc906e754.herokuapp.com/dispositivos";
+// URL de la API en Firebase
+String serverName = "https://herokuiot-default-rtdb.firebaseio.com/dispositivos/2/valor.json";
 
 unsigned long lastTime = 0;
 unsigned long timerDelay = 500;
@@ -38,15 +38,14 @@ void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
 
-    // Crear una URL para la API en Heroku, incluyendo el valor del potenciómetro
-    String serverPathPotenciometro = serverName + "/2/" + String(valorPotenciometro);
+    // Convertir el valor del potenciómetro a formato de cadena
+    String valorPotStr = String(valorPotenciometro);
 
-    // Iniciar la conexión HTTP para el potenciómetro
-    http.begin(serverPathPotenciometro.c_str());
-    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+    // Iniciar la conexión HTTP a la URL de Firebase
+    http.begin(serverName.c_str());
 
     // Enviar una solicitud HTTP PUT con el valor del potenciómetro
-    int httpResponseCodePotenciometro = http.PUT("");
+    int httpResponseCodePotenciometro = http.PUT(valorPotStr);
 
     if (httpResponseCodePotenciometro > 0) {
       Serial.print("Código de respuesta HTTP (Potenciómetro): ");
@@ -62,6 +61,6 @@ void loop() {
     // Liberar recursos para la solicitud del potenciómetro
     http.end();
   }
+
+  delay(timerDelay);
 }
-
-
